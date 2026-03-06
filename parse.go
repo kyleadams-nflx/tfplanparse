@@ -75,7 +75,7 @@ func parseResource(s *bufio.Scanner) (*ResourceChange, error) {
 		switch {
 		case IsResourceTerminator(text):
 			return rc, nil
-		case IsResourceCommentLine(text), strings.Contains(text, CHANGES_END_STRING):
+		case strings.Contains(text, CHANGES_END_STRING):
 			return nil, fmt.Errorf("unexpected line while parsing resource attribute: %s", text)
 		case IsMapAttributeChangeLine(text):
 			ma, err := parseMapAttribute(s)
@@ -107,6 +107,8 @@ func parseResource(s *bufio.Scanner) (*ResourceChange, error) {
 				return nil, err
 			}
 			rc.AttributeChanges = append(rc.AttributeChanges, ac)
+		case IsComment(text):
+			continue
 		}
 	}
 
@@ -128,7 +130,7 @@ func parseMapAttribute(s *bufio.Scanner) (*MapAttributeChange, error) {
 		switch {
 		case IsMapAttributeTerminator(text):
 			return result, nil
-		case IsResourceCommentLine(text), strings.Contains(text, CHANGES_END_STRING):
+		case strings.Contains(text, CHANGES_END_STRING):
 			return nil, fmt.Errorf("unexpected line while parsing map attribute: %s", text)
 		case IsMapAttributeChangeLine(text):
 			ma, err := parseMapAttribute(s)
@@ -160,6 +162,8 @@ func parseMapAttribute(s *bufio.Scanner) (*MapAttributeChange, error) {
 				return nil, err
 			}
 			result.AttributeChanges = append(result.AttributeChanges, ac)
+		case IsComment(text):
+			continue
 		}
 	}
 
@@ -181,7 +185,7 @@ func parseArrayAttribute(s *bufio.Scanner) (*ArrayAttributeChange, error) {
 		switch {
 		case IsArrayAttributeTerminator(text):
 			return result, nil
-		case IsResourceCommentLine(text), strings.Contains(text, CHANGES_END_STRING):
+		case strings.Contains(text, CHANGES_END_STRING):
 			return nil, fmt.Errorf("unexpected line while parsing array attribute: %s", text)
 		case IsMapAttributeChangeLine(text):
 			ma, err := parseMapAttribute(s)
@@ -213,6 +217,8 @@ func parseArrayAttribute(s *bufio.Scanner) (*ArrayAttributeChange, error) {
 				return nil, err
 			}
 			result.AttributeChanges = append(result.AttributeChanges, ac)
+		case IsComment(text):
+			continue
 		}
 	}
 
@@ -232,7 +238,7 @@ func parseJSONEncodeAttribute(s *bufio.Scanner) (*JSONEncodeAttributeChange, err
 		switch {
 		case IsJSONEncodeAttributeTerminator(text):
 			return result, nil
-		case IsResourceCommentLine(text), strings.Contains(text, CHANGES_END_STRING):
+		case strings.Contains(text, CHANGES_END_STRING):
 			return nil, fmt.Errorf("unexpected line while parsing jsonencode attribute: %s", text)
 		case IsMapAttributeChangeLine(text):
 			ma, err := parseMapAttribute(s)
@@ -260,6 +266,8 @@ func parseJSONEncodeAttribute(s *bufio.Scanner) (*JSONEncodeAttributeChange, err
 				return nil, err
 			}
 			result.AttributeChanges = append(result.AttributeChanges, ac)
+		case IsComment(text):
+			continue
 		}
 	}
 

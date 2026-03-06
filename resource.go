@@ -46,12 +46,30 @@ type ResourceChange struct {
 	AttributeChanges []attributeChange
 }
 
-// IsResourceCommentLine returns true if the line is a valid resource comment line
-// A valid line starts with a "#" and has a suffix describing the change
+// IsComment returns true if the line is a comment.
+//
+// A valid line starts with a "#".
+func IsComment(line string) bool {
+	return strings.HasPrefix(strings.TrimSpace(line), "#")
+}
+
+// IsResourceCommentLine returns true if the line is a resource "header" comment line
+// A valid line starts with a "#" and ends with a known resource change suffix
 // Example: # module.type.item will be created
 func IsResourceCommentLine(line string) bool {
-	trimmed := strings.TrimSpace(line)
-	return strings.HasPrefix(trimmed, "#") && !strings.HasSuffix(trimmed, RESOURCE_READ_VALUES_NOT_YET_KNOWN)
+	line = strings.TrimSpace(line)
+
+	if !IsComment(line) {
+		return false
+	}
+
+	for _, suffix := range resourceCommentSuffixes {
+		if strings.HasSuffix(line, suffix) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // IsResourceTerminator returns true if the line is a "}"
@@ -218,4 +236,9 @@ attrs:
 
 func parseResourceAddressFromComment(comment, updateText string) string {
 	return strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(comment, "# "), updateText))
+}
+
+var resourceCommentSuffixes = []string{
+	RESOURCE_CREATED, RESOURCE_DESTROYED, RESOURCE_READ,
+	RESOURCE_REPLACED, RESOURCE_TAINTED, RESOURCE_UPDATED_IN_PLACE,
 }

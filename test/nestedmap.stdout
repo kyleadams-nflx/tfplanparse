@@ -17,14 +17,17 @@ Terraform will perform the following actions:
                 "label"    = "value"
                 "other"    = "label"
               + "newLabel" = "newLabel"
+                # (5 unchanged elements hidden)
             }
             name             = "my-namespace"
             resource_version = "123"
             self_link        = "/api/v1/namespaces/my-namespace"
             uid              = "some-uid-123"
+            # (8 unchanged attributes hidden)
         }
 
         timeouts {}
+        # (1 unchanged block hidden)
     }
 
 Plan: 0 to add, 1 to change, 0 to destroy.

@@ -334,6 +334,18 @@ func TestParse(t *testing.T) {
 			file: "test/anothermap.stdout",
 			expected: []*ResourceChange{
 				&ResourceChange{
+					Address:       "module.mymodule.data.kubernetes_config_map.my_configmap",
+					ModuleAddress: "module.mymodule",
+					Type:          "kubernetes_config_map",
+					Name:          "my_configmap",
+					UpdateType:    "read",
+					AttributeChanges: []attributeChange{
+						&AttributeChange{Name: "id", NewValue: string("(known after apply)"), UpdateType: "created"},
+						&AttributeChange{Name: "name", NewValue: string("my-configmap"), UpdateType: "created"},
+						&AttributeChange{Name: "namespace", NewValue: string("my-namespace"), UpdateType: "created"},
+					},
+				},
+				&ResourceChange{
 					Address:       "module.mymodule.kubernetes_role_binding.user_is_edit",
 					ModuleAddress: "module.mymodule",
 					Type:          "kubernetes_role_binding",
@@ -820,7 +832,7 @@ func TestParse(t *testing.T) {
 				t.Fatal(err)
 			}
 			if diff := cmp.Diff(got, tc.expected); diff != "" {
-				t.Errorf("(-got, +expected)\n%s", diff)
+				t.Errorf("(-want, +got)\n%s", diff)
 			}
 		})
 	}

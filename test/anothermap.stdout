@@ -7,6 +7,15 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
+
+# module.mymodule.data.kubernetes_config_map.my_configmap will be read during apply
+# (depends on a resource or a module with changes pending)
+<= data "kubernetes_config_map" "my_configmap" {
+     + id        = (known after apply)
+     + name      = "my-configmap"
+     + namespace = "my-namespace"
+}
+
 # module.mymodule.kubernetes_role_binding.user_is_edit will be created
   + resource "kubernetes_role_binding" "user_is_edit" {
       + id = (known after apply)
