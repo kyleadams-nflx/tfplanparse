@@ -242,6 +242,71 @@ func TestParse(t *testing.T) {
 				},
 			},
 		},
+		"computedmap": {
+			file: "test/computedobject.stdout",
+			expected: []*ResourceChange{
+				&ResourceChange{
+					Address:       "module.my-project.google_project_services.gcp_enabled_services[0]",
+					ModuleAddress: "module.my-project",
+					Type:          "google_project_services",
+					Name:          "gcp_enabled_services",
+					Index:         0,
+					UpdateType:    UpdateInPlaceResource,
+					AttributeChanges: []attributeChange{
+						&AttributeChange{
+							Name:       "disable_on_destroy",
+							OldValue:   false,
+							NewValue:   true,
+							UpdateType: UpdateInPlaceResource,
+						},
+						&AttributeChange{
+							Name:       "id",
+							OldValue:   "my-project",
+							NewValue:   "test",
+							UpdateType: UpdateInPlaceResource,
+						},
+						&AttributeChange{
+							Name:       "project",
+							OldValue:   "my-project",
+							NewValue:   "test2",
+							UpdateType: UpdateInPlaceResource,
+						},
+						&ArrayAttributeChange{
+							Name: "computed_services",
+							AttributeChanges: []attributeChange{
+								&AttributeChange{
+									OldValue:   "appengine.googleapis.com",
+									NewValue:   nil,
+									UpdateType: DestroyResource,
+								},
+								&AttributeChange{
+									OldValue:   "audit.googleapis.com",
+									NewValue:   nil,
+									UpdateType: DestroyResource,
+								},
+							},
+							UpdateType: UpdateInPlaceResource,
+						},
+						&MapAttributeChange{
+							Name: "computed_tags",
+							AttributeChanges: []attributeChange{
+								&AttributeChange{
+									Name:       "key1",
+									OldValue:   "old",
+									NewValue:   "new",
+									UpdateType: UpdateInPlaceResource,
+								},
+							},
+							UpdateType: UpdateInPlaceResource,
+						},
+						&MapAttributeChange{
+							Name:       "timeouts",
+							UpdateType: UpdateInPlaceResource,
+						},
+					},
+				},
+			},
+		},
 		"nested map": {
 			file: "test/nestedmap.stdout",
 			expected: []*ResourceChange{
@@ -570,6 +635,115 @@ func TestParse(t *testing.T) {
 								},
 							},
 							UpdateType: DestroyResource,
+						},
+					},
+				},
+			},
+		},
+		"forcereplace": {
+			file: "test/forcereplace.stdout",
+			expected: []*ResourceChange{
+				&ResourceChange{
+					Address:       "module.mymodule.kubernetes_namespace.mynamespace",
+					ModuleAddress: "module.mymodule",
+					Type:          "kubernetes_namespace",
+					Name:          "mynamespace",
+					UpdateType:    ForceReplaceResource,
+					AttributeChanges: []attributeChange{
+						&AttributeChange{
+							Name:       "id",
+							OldValue:   "namespace-id",
+							NewValue:   "namespace-id",
+							UpdateType: ForceReplaceResource,
+						},
+						&MapAttributeChange{
+							Name: "metadata",
+							AttributeChanges: []attributeChange{
+								&MapAttributeChange{
+									Name:       "annotations",
+									UpdateType: NoOpResource,
+								},
+								&AttributeChange{
+									Name:       "generation",
+									OldValue:   0,
+									NewValue:   0,
+									UpdateType: NoOpResource,
+								},
+								&MapAttributeChange{
+									Name: "labels",
+									AttributeChanges: []attributeChange{
+										&AttributeChange{
+											Name:       "label",
+											OldValue:   "value",
+											NewValue:   "value",
+											UpdateType: NoOpResource,
+										},
+										&AttributeChange{
+											Name:       "other",
+											OldValue:   "label",
+											NewValue:   "label",
+											UpdateType: NoOpResource,
+										},
+										&AttributeChange{
+											Name:       "newLabel",
+											OldValue:   nil,
+											NewValue:   "newLabel",
+											UpdateType: NewResource,
+										},
+									},
+									UpdateType: UpdateInPlaceResource,
+								},
+								&AttributeChange{
+									Name:       "name",
+									OldValue:   "my-namespace",
+									NewValue:   "my-namespace",
+									UpdateType: NoOpResource,
+								},
+								&AttributeChange{
+									Name:       "resource_version",
+									OldValue:   "123",
+									NewValue:   "123",
+									UpdateType: NoOpResource,
+								},
+								&AttributeChange{
+									Name:       "self_link",
+									OldValue:   "/api/v1/namespaces/my-namespace",
+									NewValue:   "/api/v1/namespaces/my-namespace",
+									UpdateType: NoOpResource,
+								},
+								&AttributeChange{
+									Name:       "uid",
+									OldValue:   "some-uid-123",
+									NewValue:   "some-uid-123",
+									UpdateType: NoOpResource,
+								},
+							},
+							UpdateType: ForceReplaceResource,
+						},
+						&ArrayAttributeChange{
+							Name: "array_test",
+							AttributeChanges: []attributeChange{
+								&AttributeChange{
+									OldValue:   nil,
+									NewValue:   "entry1",
+									UpdateType: NewResource,
+								},
+								&AttributeChange{
+									OldValue:   "entry2",
+									NewValue:   nil,
+									UpdateType: DestroyResource,
+								},
+							},
+							UpdateType: ForceReplaceResource,
+						},
+						&ArrayAttributeChange{
+							Name: "array_test2",
+							AttributeChanges: nil,
+							UpdateType: ForceReplaceResource,
+						},
+						&MapAttributeChange{
+							Name:       "timeouts",
+							UpdateType: NoOpResource,
 						},
 					},
 				},
