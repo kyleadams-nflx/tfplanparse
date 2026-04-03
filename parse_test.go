@@ -73,6 +73,12 @@ func TestParse(t *testing.T) {
 					Type:          "github_team_membership",
 					Name:          "member",
 					Index:         1,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 1,
+							Address: "module.my-module.github_team_membership.member",
+						},
+					},
 					UpdateType:    DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
@@ -113,6 +119,12 @@ func TestParse(t *testing.T) {
 					Type:          "github_team_membership",
 					Name:          "member",
 					Index:         2,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 2,
+							Address: "module.my-module.github_team_membership.member",
+						},
+					},
 					UpdateType:    DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
@@ -153,6 +165,12 @@ func TestParse(t *testing.T) {
 					Type:          "github_team_membership",
 					Name:          "member",
 					Index:         3,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 3,
+							Address: "module.my-module.github_team_membership.member",
+						},
+					},
 					UpdateType:    DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
@@ -198,6 +216,12 @@ func TestParse(t *testing.T) {
 					Type:          "google_project_services",
 					Name:          "gcp_enabled_services",
 					Index:         0,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 0,
+							Address: "module.my-project.google_project_services.gcp_enabled_services",
+						},
+					},
 					UpdateType:    DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
@@ -242,6 +266,37 @@ func TestParse(t *testing.T) {
 				},
 			},
 		},
+		"doubleindexed": {
+			file: "test/doubleindexed.stdout",
+			expected: []*ResourceChange{
+				&ResourceChange{
+					Address:       "module.mymodule.module.submodule[0].data.subsubmodule.this[0]",
+					ModuleAddress: "module.mymodule",
+					Type:          "subsubmodule",
+					Name:          "this",
+					Index:         0,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 0,
+							Address: "module.mymodule.module.submodule",
+						},
+						{
+							Index: 0,
+							Address: "data.subsubmodule.this",
+						},
+					},
+					UpdateType:    ReadResource,
+					AttributeChanges: []attributeChange{
+						&AttributeChange{
+							Name:       "dummy",
+							OldValue:   nil,
+							NewValue:   "(known after apply)",
+							UpdateType: NewResource,
+						},
+					},
+				},
+			},
+		},
 		"computedmap": {
 			file: "test/computedobject.stdout",
 			expected: []*ResourceChange{
@@ -251,6 +306,12 @@ func TestParse(t *testing.T) {
 					Type:          "google_project_services",
 					Name:          "gcp_enabled_services",
 					Index:         0,
+					FullIndex: []ResourceIndex{
+						{
+							Index: 0,
+							Address: "module.my-project.google_project_services.gcp_enabled_services",
+						},
+					},
 					UpdateType:    UpdateInPlaceResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
