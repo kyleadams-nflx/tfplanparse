@@ -204,7 +204,6 @@ func (rc *ResourceChange) finalizeResourceInfo() error {
 	} else {
 		values = strings.Split(rc.Address, ".")
 	}
-	fmt.Println("values", rc.Address, values)
 
 	// TODO: handle module.module_name.data.type.name better
 	// TODO: eventually do something with "data"
