@@ -304,6 +304,15 @@ func TestNewAttributeChangeFromArray(t *testing.T) {
 				UpdateType: NewResource,
 			},
 		},
+		"array item swapped": {
+			line:        `~ "old" -> "new"`,
+			shouldError: false,
+			expected: &AttributeChange{
+				OldValue:   "old",
+				NewValue:   "new",
+				UpdateType: UpdateInPlaceResource,
+			},
+		},
 		"other line": {
 			line:        `}`,
 			shouldError: true,
