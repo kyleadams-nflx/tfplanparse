@@ -152,9 +152,15 @@ func NewAttributeChangeFromArray(line string) (*AttributeChange, error) {
 			UpdateType: DestroyResource,
 		}, nil
 	} else if strings.HasPrefix(line, "~") {
-		// replace
-		// TODO: confirm this is possible? I think array entries are immutable
-		return nil, fmt.Errorf("unexpected replace single attribute in array %s", line)
+		parts := strings.Split(line, ATTRIBUTE_CHANGE_DELIMITER)
+		if len(parts) != 2 {
+			return nil, fmt.Errorf("unexpected replace single attribute in array %s", line)
+		}
+		return &AttributeChange{
+			OldValue:   normalizeArrayAttribute(parts[0]),
+			NewValue:   normalizeArrayAttribute(parts[1]),
+			UpdateType: UpdateInPlaceResource,
+		}, nil
 	} else {
 		return &AttributeChange{
 			OldValue:   normalizeArrayAttribute(line),
