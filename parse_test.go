@@ -75,11 +75,11 @@ func TestParse(t *testing.T) {
 					Index:         1,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 1,
+							Index:   1,
 							Address: "module.my-module.github_team_membership.member",
 						},
 					},
-					UpdateType:    DestroyResource,
+					UpdateType: DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "etag",
@@ -121,11 +121,11 @@ func TestParse(t *testing.T) {
 					Index:         2,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 2,
+							Index:   2,
 							Address: "module.my-module.github_team_membership.member",
 						},
 					},
-					UpdateType:    DestroyResource,
+					UpdateType: DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "etag",
@@ -167,11 +167,11 @@ func TestParse(t *testing.T) {
 					Index:         3,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 3,
+							Index:   3,
 							Address: "module.my-module.github_team_membership.member",
 						},
 					},
-					UpdateType:    DestroyResource,
+					UpdateType: DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "etag",
@@ -218,11 +218,11 @@ func TestParse(t *testing.T) {
 					Index:         0,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 0,
+							Index:   0,
 							Address: "module.my-project.google_project_services.gcp_enabled_services",
 						},
 					},
-					UpdateType:    DestroyResource,
+					UpdateType: DestroyResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "disable_on_destroy",
@@ -277,15 +277,15 @@ func TestParse(t *testing.T) {
 					Index:         0,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 0,
+							Index:   0,
 							Address: "module.mymodule.module.submodule",
 						},
 						{
-							Index: 0,
+							Index:   0,
 							Address: "data.subsubmodule.this",
 						},
 					},
-					UpdateType:    ReadResource,
+					UpdateType: ReadResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "dummy",
@@ -308,11 +308,11 @@ func TestParse(t *testing.T) {
 					Index:         0,
 					FullIndex: []ResourceIndex{
 						{
-							Index: 0,
+							Index:   0,
 							Address: "module.my-project.google_project_services.gcp_enabled_services",
 						},
 					},
-					UpdateType:    UpdateInPlaceResource,
+					UpdateType: UpdateInPlaceResource,
 					AttributeChanges: []attributeChange{
 						&AttributeChange{
 							Name:       "disable_on_destroy",
@@ -798,9 +798,9 @@ func TestParse(t *testing.T) {
 							UpdateType: ForceReplaceResource,
 						},
 						&ArrayAttributeChange{
-							Name: "array_test2",
+							Name:             "array_test2",
 							AttributeChanges: nil,
-							UpdateType: ForceReplaceResource,
+							UpdateType:       ForceReplaceResource,
 						},
 						&MapAttributeChange{
 							Name:       "timeouts",
@@ -824,6 +824,40 @@ func TestParse(t *testing.T) {
 							Name:       "id",
 							OldValue:   "my-namespace/user_is_view",
 							NewValue:   nil,
+							UpdateType: DestroyResource,
+						},
+						&JSONEncodeAttributeChange{
+							Name: "policy_known",
+							AttributeChanges: []attributeChange{
+								&MapAttributeChange{
+									AttributeChanges: []attributeChange{
+										&AttributeChange{
+											Name:       "k",
+											OldValue:   "v",
+											NewValue:   nil,
+											UpdateType: DestroyResource,
+										},
+									},
+									UpdateType: NoOpResource,
+								},
+							},
+							UpdateType: DestroyResource,
+						},
+						&JSONEncodeAttributeChange{
+							Name: "policy_null_close",
+							AttributeChanges: []attributeChange{
+								&MapAttributeChange{
+									AttributeChanges: []attributeChange{
+										&AttributeChange{
+											Name:       "m",
+											OldValue:   "n",
+											NewValue:   nil,
+											UpdateType: DestroyResource,
+										},
+									},
+									UpdateType: NoOpResource,
+								},
+							},
 							UpdateType: DestroyResource,
 						},
 						&MapAttributeChange{
