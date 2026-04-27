@@ -87,12 +87,23 @@ func IsResourceTerminator(line string) bool {
 	return strings.TrimSpace(line) == "}"
 }
 
-// IsResourceChangeLine returns true if the line is a valid resource change line
-// A valid line starts with the change type, then "resource" or "data", and then the type and name, followed by a {
-// Example: + resource "type" "name" {
+// IsResourceChangeLine returns true if the line opens a resource or data block in the plan diff.
+// Example: + resource "type" "name" {  or  <= data "type" "name" {
+//
+// Lines such as ~ resource_policy = { are attribute maps: after stripping change markers they begin
+// with "resource…" but must not match here, so we require the Terraform quoted header form.
 func IsResourceChangeLine(line string) bool {
+	line = strings.TrimSpace(line)
 	line = strings.TrimLeft(line, "+/-~<= ")
-	return (strings.HasPrefix(line, "resource") || strings.HasPrefix(line, "data")) && strings.HasSuffix(line, " {")
+	if strings.HasSuffix(line, ForcesReplacementComment) {
+		line = strings.TrimSpace(strings.TrimSuffix(line, ForcesReplacementComment))
+	}
+	line = strings.TrimSpace(line)
+	if !strings.HasSuffix(line, "{") {
+		return false
+	}
+	return strings.HasPrefix(line, `resource "`) || strings.HasPrefix(line, `resource '`) ||
+		strings.HasPrefix(line, `data "`) || strings.HasPrefix(line, `data '`)
 }
 
 // NewResourceChangeFromComment creates a ResourceChange from a valid resource comment line
