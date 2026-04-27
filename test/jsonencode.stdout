@@ -10,6 +10,18 @@ Terraform will perform the following actions:
   - resource "kubernetes_role_binding" "user_is_view" {
       - id = "my-namespace/user_is_view" -> null
 
+      - policy_known = jsonencode(
+            {
+              - k = "v"
+            }
+        ) -> (known after apply)
+
+      - policy_null_close = jsonencode(
+            {
+              - m = "n"
+            }
+        ) -> null
+
       - metadata {
           - annotations      = {
               - "encoded" = jsonencode(

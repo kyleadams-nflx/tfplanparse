@@ -27,10 +27,18 @@ func IsJSONEncodeAttributeChangeLine(line string) bool {
 	return validPrefix && isJSONEncode && !IsResourceChangeLine(line)
 }
 
-// IsJSONEncodeAttributeTerminator returns true if the line is ")"
-// TODO: verify this
+// IsJSONEncodeAttributeTerminator returns true if the line closes jsonencode:
+// ")", ") -> null", or ") -> (known after apply)" and similar Terraform plan forms.
 func IsJSONEncodeAttributeTerminator(line string) bool {
-	return strings.TrimSuffix(strings.TrimSpace(line), " -> null") == ")"
+	line = strings.TrimSpace(line)
+	if strings.TrimSuffix(line, " -> null") == ")" {
+		return true
+	}
+	if strings.HasPrefix(line, ")") {
+		rest := strings.TrimSpace(strings.TrimPrefix(line, ")"))
+		return rest == "" || strings.HasPrefix(rest, "->")
+	}
+	return false
 }
 
 // NewJSONEncodeAttributeChangeFromLine initializes a JSONEncodeAttributeChange from a line containing a JSONEncode change
